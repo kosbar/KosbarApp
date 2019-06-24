@@ -4,42 +4,71 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.LoggingBehavior;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.share.model.GameRequestContent;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.GameRequestDialog;
+import com.facebook.share.widget.ShareDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
 
     public final String TAG = "kosbarApp:";
     private LoginButton loginButton;
+    private Button gameRequestButton;
     private TextView displayName, emailID;
     private ImageView displayImage;
     private CallbackManager callbackManager;
+    private static GameRequestDialog gameRequestDialog;
+
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //FacebookSdk.sdkInitialize(this.getApplicationContext());
+        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
 
         displayName = findViewById(R.id.display_name);
         emailID = findViewById(R.id.email);
         displayImage = findViewById(R.id.image_view);
         loginButton = findViewById(R.id.login_button);
+        gameRequestButton = findViewById(R.id.button2);
+
+        gameRequestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickRequestButton();
+            }
+        });
 
         Log.e(TAG, "HELLO ANDROID WORLD");
         callbackManager = CallbackManager.Factory.create();
@@ -50,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                AccessToken accessToken = loginResult.getAccessToken();
-                useLoginInformation(accessToken);
+                Set<String> perms = loginResult.getAccessToken().getPermissions();
+                Log.e(TAG, "permisions" + perms.toString());
                 Log.e(TAG, "ETO POBEDA " + loginResult.getAccessToken().getDataAccessExpirationTime());
             }
 
@@ -66,40 +95,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "WTF?!?!?!?");
             }
         });
-
     }
+
     @Override
     public void onActivityResult(int requestCode, int resulrCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resulrCode, data);
         super.onActivityResult(requestCode, resulrCode, data);
+
+        callbackManager.onActivityResult(requestCode, resulrCode, data);
     }
 
-    private void useLoginInformation(AccessToken accessToken) {
-        /**
-         Creating the GraphRequest to fetch user details
-         1st Param - AccessToken
-         2nd Param - Callback (which will be invoked once the request is successful)
-         **/
-        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-            //OnCompleted is invoked once the GraphRequest is successful
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                try {
-                    String name = object.getString("name");
-                    String email = object.getString("email");
-                    String image = object.getJSONObject("picture").getJSONObject("data").getString("url");
-                    displayName.setText(name);
-                    emailID.setText(email);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        // We set parameters to the GraphRequest using a Bundle.
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,picture.width(200)");
-        request.setParameters(parameters);
-        // Initiate the GraphRequest
-        request.executeAsync();
+    private void onClickRequestButton() {
+        GameRequestDialog.show(this, new GameRequestContent.Builder().setMessage("TEST").build());
     }
 }

@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.574"
+        app:layout_constraintVertical_bias="0.867"
         tools:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -27,12 +27,11 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
         android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintBottom_toTopOf="@+id/email"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.619"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.072" />
+        app:layout_constraintVertical_bias="0.302" />
 
     <TextView
         android:id="@+id/email"
@@ -41,12 +40,13 @@
         android:layout_below="@id/display_name"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/image_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/display_name"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintVertical_bias="0.606" />
 
     <com.facebook.login.widget.LoginButton
 
@@ -54,11 +54,25 @@
         android:layout_width="273dp"
         android:layout_height="900dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.637"
+        app:layout_constraintHorizontal_bias="0.579"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="559dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.619"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
 
 </android.support.constraint.ConstraintLayout>

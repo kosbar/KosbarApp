@@ -29,8 +29,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-    </application>
 
+        <provider android:authorities="com.facebook.app.FacebookContentProvider2325196897692980" android:exported="true" android:name="com.facebook.FacebookContentProvider" />
+
+    </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
