@@ -1,9 +1,14 @@
 package com.example.kosbarapp;
 
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +27,8 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.widget.GameRequestDialog;
 import com.facebook.share.model.GameRequestContent;
+
+import java.lang.annotation.Target;
 import java.util.Set;
 
 
@@ -54,27 +61,54 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login_button);
         gameRequestButton = findViewById(R.id.button2);
 
-        Notification.Builder builder =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Title")
-                        .setContentText("Notification text");
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+        Notification.Builder builder = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            NotificationChannel channel = new NotificationChannel("WTF", "My channel",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("My channel description");
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            channel.enableVibration(false);
+            notificationManager.createNotificationChannel(channel);
+
+            builder = new Notification.Builder(this, "WTF")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setContentTitle("Title")
+                    .setContentText("Notification text")
+                    .setContentIntent(resultPendingIntent);
+
+        }
+
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.O) {
+            builder = new Notification.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setContentTitle("Title")
+                    .setContentText("Notification text")
+                    .setContentIntent(resultPendingIntent);
+        }
 
         notification = builder.build();
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
-
 
         gameRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 NotificationManager notificationManager =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(1, notification);
-
-                onClickRequestButton();
+                //onClickRequestButton();
             }
         });
 
